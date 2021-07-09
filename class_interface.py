@@ -34,7 +34,7 @@ def load_images(name):
 if __name__ == "__main__":
     DATA = load_images('img_list')
     game = Game({
-        'size_x' : 100
+        'size_x' : 100,
     })
     pygame.init()
     print(game.map.highs)

@@ -3,6 +3,7 @@
 '''
 
 from random import  randint
+from class_object import get_object
 
 def broke_line(start_point, end_point, line):
     '''
@@ -48,6 +49,16 @@ def generate_highs(size_x):
             x += 1
     return highs
 
+def generate_objects(size_x):
+    '''
+    Генерирует случайное количество объектов в пределах игровой карты длиной size_x : int.
+    Среди объектов обязательно будет присутствовать игрок.
+    '''
+    objects = []
+    player = get_object('player')
+    objects.append(player)
+    return objects
+
 class GameMap:
     '''
     Класс игровой карты.
@@ -67,7 +78,12 @@ class GameMap:
     '''
     def __init__(self, size_x):
         self.highs = generate_highs(size_x)
-
+        self.objects = generate_objects(size_x)
+        for index, value in enumerate(self.objects):
+            if value['name'] == 'player':
+                self.player = index
+                break
 if __name__ == "__main__":
     temp = GameMap(200)
     print(temp.highs)
+    print(temp.objects)
