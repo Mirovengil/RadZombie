@@ -24,6 +24,30 @@ def broke_line(start_point, end_point, line):
     broke_line(start_point, middle, line)
     broke_line(middle, end_point, line)
 
+def generate_highs(size_x):
+    '''
+    Генерирует игровую карту высот и возвращает её в виде одномерного массива целых чисел.
+    Все высоты больше нуля.
+    Об алгоритме можно почитать в документации.
+    DIFFERENCE_BETWEEN влияет на разницу между стартовой и конечной точками карты.
+    В принципе, никто не запрещает выставлять вручную, чтобы было интереснее.
+    '''
+    DIFFERENCE_BETWEEN = randint(1, 200)
+    highs = []
+    for i in range(size_x):
+        highs.append(0)
+    highs[0] = 0
+    highs[size_x - 1] = DIFFERENCE_BETWEEN
+    broke_line(0, size_x - 1, highs)       
+    shift = min(highs)
+    if (shift < 0):
+        shift = -shift
+        x = 0
+        while x < size_x:
+            highs[x] += shift
+            x += 1
+    return highs
+
 class GameMap:
     '''
     Класс игровой карты.
@@ -38,27 +62,11 @@ class GameMap:
     Поля:
         size_x : int -- длина игровой карты (в блоках).
         highs : [int] -- массив, где элемент под индексом x : int соответствует высоте карты в точке x.
-
-    DIFFERENCE_BETWEEN влияет на разницу между стартовой и конечной точками карты.
-    В принципе, никто не запрещает выставлять вручную, чтобы было интереснее.
+        objects : [Object] -- массив игровых объектов (за подробностями -- в документацию).
+        player : int -- номер игрока в массиве self.objects (для быстрого доступа к нему). 
     '''
     def __init__(self, size_x):
-        DIFFERENCE_BETWEEN = randint(1, 200)
-        self.size_x = size_x
-        self.highs = []
-        for i in range(self.size_x):
-            self.highs.append(0)
-        #Генерируется карта высот. Подробнее можно прочитать в документации.
-        self.highs[0] = 0
-        self.highs[self.size_x - 1] = DIFFERENCE_BETWEEN
-        broke_line(0, size_x - 1, self.highs)       
-        shift = min(self.highs)
-        if (shift < 0):
-            shift = -shift
-            x = 0
-            while x < self.size_x:
-                self.highs[x] += shift
-                x += 1
+        self.highs = generate_highs(size_x)
 
 if __name__ == "__main__":
     temp = GameMap(200)

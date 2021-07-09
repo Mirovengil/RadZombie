@@ -15,6 +15,5 @@ class Game:
         options : dict -- словарь с настройками создаваемой игры.
         Имеет следующие поля:
             size_x : int -- длина игровой карты (в блоках).
-            size_y : int -- высота игровой карты (в блоках).
         '''
-        self.map = GameMap(options['size_x'], options['size_y'])
+        self.map = GameMap(options['size_x'])
