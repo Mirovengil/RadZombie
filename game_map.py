@@ -83,7 +83,37 @@ class GameMap:
             if value['name'] == 'player':
                 self.player = index
                 break
+
+    def get_player(self):
+        '''
+        Возвращает игрока, как объект.
+        '''
+        return self.objects[self.player]
+
+    def get_len(self):
+        '''
+        Возвращает длину карты (по оси x, естественно) в клетках.
+        '''
+        return len(self.highs)
+
+    def get_players_sight(self, sight_len, player_position_on_screen):
+        '''
+        Возвращает массив высот : [int], которые игрок может наблюдать на расстоянии sight_len : int
+        справа и слева от себя.
+        При этом, игрок помещается на высоту player_position_on_screen : int.
+        '''
+        player = self.get_player()
+        start = max(0, player['position'] - sight_len)
+        finish = min(player['position'] + sight_len, self.get_len() - 1)
+        x = start
+        sight = []
+        while x <= finish:
+            sight.append(self.highs[x] -  self.highs[player['position']] + player_position_on_screen)
+            x += 1
+        return sight
+        
 if __name__ == "__main__":
     temp = GameMap(200)
     print(temp.highs)
     print(temp.objects)
+    print(temp.player)

@@ -17,3 +17,12 @@ class Game:
             size_x : int -- длина игровой карты (в блоках).
         '''
         self.map = GameMap(options['size_x'])
+
+    def landscapes(self):
+        '''
+        Возвращает массив высот, которые надо отрисовать, с учётом типов их биомов (пока не
+        реализованы!).
+        '''
+        highs = self.map.get_players_sight(19, 15)
+        return highs
+        

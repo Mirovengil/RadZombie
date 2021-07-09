@@ -26,21 +26,30 @@ def load_images(name):
     названия ('./img/image.png' будет доступно по ключу 'image').
     Все необходимые ключи надо указать в файле ./<name>.txt
     '''
-    fin = open('./' + name + '.txt', 'r' )
-    fin.close()
     DATA = dict()
+    fin = open('./' + name + '.txt', 'r' )
+    for image in fin:
+        DATA[image.replace('/n', '')] = get_img_by_name(image.replace('/n', '')) 
+    fin.close()
+
+def draw_game(game):
+    '''
+    Отрисовывает на экран состояние игры game : Game.
+    '''
+    
     
 
 if __name__ == "__main__":
-    DATA = load_images('img_list')
     game = Game({
         'size_x' : 100,
     })
     pygame.init()
-    print(game.map.highs)
     screen = pygame.display.set_mode((WINDOW_SIZE_X, WINDOW_SIZE_Y))
+    print(game.map.get_players_sight(5, 15))
+    DATA = load_images('img_list')
     game_over = False
     while not game_over:
+        draw_game(game)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_over = True
