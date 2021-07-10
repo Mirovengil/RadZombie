@@ -15,7 +15,7 @@ def broke_line(start_point, end_point, line):
         line : [int] -- массив, хранящий высоты для всех точек прямой.
     Чем больше MAX_BROKE, тем большие перепады высот могут встретиться на карте. 
     '''
-    MAX_BROKE = 3
+    MAX_BROKE = 1
     if end_point - start_point == 1:
         return 0
     middle = (start_point + end_point) // 2

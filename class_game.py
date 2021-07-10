@@ -24,5 +24,13 @@ class Game:
         реализованы!).
         '''
         highs = self.map.get_players_sight(19, 15)
-        return highs
+        places = []
+        cnt = 0
+        for high in highs:
+            cnt += 1
+            if cnt != len(highs) // 2:
+                places.append((high, 'dirt_block'))
+            else:
+                places.append((high, 'marker'))
+        return places
         
