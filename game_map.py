@@ -5,7 +5,7 @@
 from random import  randint
 from class_object import get_object
 
-def broke_line(start_point, end_point, line):
+def broke_line(start_point, end_point, line, arg):
     '''
     Функция для рекурсивной генерации карты высот. Де-факто, карта высот является
     шумом.
@@ -20,10 +20,12 @@ def broke_line(start_point, end_point, line):
         return 0
     middle = (start_point + end_point) // 2
     middle_value = (line[start_point] + line[end_point]) // 2
-    broke = (end_point - start_point) * randint(-MAX_BROKE, MAX_BROKE)
+    broke = randint(-MAX_BROKE, MAX_BROKE)
+    if arg is None:
+        broke *= (end_point - start_point)
     line[middle] = middle_value + broke
-    broke_line(start_point, middle, line)
-    broke_line(middle, end_point, line)
+    broke_line(start_point, middle, line, arg)
+    broke_line(middle, end_point, line, arg)
 
 def generate_highs(size_x):
     '''
@@ -32,14 +34,24 @@ def generate_highs(size_x):
     Об алгоритме можно почитать в документации.
     DIFFERENCE_BETWEEN влияет на разницу между стартовой и конечной точками карты.
     В принципе, никто не запрещает выставлять вручную, чтобы было интереснее.
+    START_HIGH задаёт стартовую высоту всей карты.
+    MIN_LANDSCAPES задаёт минимальное количество искривлений на карте.
+    MAX_LANDSCAPES задаёт максимальное количество искривлений на карте.
     '''
     DIFFERENCE_BETWEEN = randint(1, 200)
+    START_HIGH = 100
+    MIN_LANDSCAPES = size_x // 128
+    MAX_LANDSCAPES = size_x // 64
     highs = []
     for i in range(size_x):
-        highs.append(0)
-    highs[0] = 0
-    highs[size_x - 1] = 0
-    broke_line(0, size_x - 1, highs)       
+        highs.append(START_HIGH)
+    broken_len = [9, 17, 33, 65]
+    broke_line(0, size_x - 1, highs, 'no proportional')
+    for i in range(randint(MIN_LANDSCAPES, MAX_LANDSCAPES)):
+        start_point = randint(0, size_x - 1)
+        end_point = start_point + broken_len[randint(0, len(broken_len) - 1)]
+        if end_point < size_x:
+            broke_line(start_point, end_point, highs, None)       
     shift = min(highs)
     if (shift < 0):
         shift = -shift
