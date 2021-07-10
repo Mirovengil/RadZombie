@@ -38,7 +38,7 @@ def generate_highs(size_x):
     for i in range(size_x):
         highs.append(0)
     highs[0] = 0
-    highs[size_x - 1] = DIFFERENCE_BETWEEN
+    highs[size_x - 1] = 0
     broke_line(0, size_x - 1, highs)       
     shift = min(highs)
     if (shift < 0):

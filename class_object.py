@@ -15,7 +15,7 @@ def get_object(name):
     '''
     fin = open('./data/' + name + ".json")
     obj = json.load(fin)
-    obj['position'] = 30 #ИСПРАВИТЬ!!
+    obj['position'] = 55 #ИСПРАВИТЬ!!
     obj['hp'] = obj['max hp']
     obj['name'] = name
     fin.close()

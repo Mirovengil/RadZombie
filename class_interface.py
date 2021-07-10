@@ -48,6 +48,7 @@ def draw_game(screen, game):
     cnt = 0
     for high, block in highs:
         if high <= 0:
+            cnt += 1
             continue
         block_pos = WINDOW_SIZE_Y
         for i in range(high):
