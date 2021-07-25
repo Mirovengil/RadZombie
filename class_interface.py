@@ -92,9 +92,9 @@ def draw_game(screen, game):
     '''
     cls(screen)
     highs = game.landscapes()
-    waters = game.waters()
+    covering = game.covering()
     draw_terrain(screen, highs)
-    draw_covering(screen, highs, waters)
+    draw_covering(screen, highs, covering)
 
 if __name__ == "__main__":
     game = Game({

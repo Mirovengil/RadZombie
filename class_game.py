@@ -34,13 +34,10 @@ class Game:
                 places.append((high, 'marker'))
         return places
 
-    def waters(self):
+    def covering(self):
         '''
-        Возвращает разность между уровнями жидкости и земли, чтобы жидкость можно было рисовать.
+        Возвращает разность между уровнями покрытия и поверхности.
         Биомы (ПОКА НЕТ!) учитываются 
         '''
-        levels = self.map.get_waters(19)
-        waters = []
-        for level in levels:
-            waters.append((level, 'water_block'))
-        return waters
+        covering = self.map.get_covering(19)
+        return covering

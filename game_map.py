@@ -71,15 +71,15 @@ def generate_objects(size_x):
     objects.append(player)
     return objects
 
-def make_water(line, level):
+def make_water(line, level, covering):
     '''
     Заполняет те блоки, которые ниже уровня level : int, водой.
     '''
-    waters = []
+    x = 0
     for y in line:
-        waters.append(max(level - y, 0))
-    return waters
-
+        if y <= level:
+            covering[x] = (level - y + 1, 'water_block')
+        x += 1
 class GameMap:
     '''
     Класс игровой карты.
@@ -94,8 +94,8 @@ class GameMap:
     Поля:
         size_x : int -- длина игровой карты (в блоках).
         highs : [int] -- массив, где элемент под индексом x : int соответствует высоте карты в точке x.
-        waters : [int] -- массив, где элемент под индексом x : int соответсвует высоте водяного покрова
-        относительно highs[x] в точке x. 0 означает, что воды на данной координате нет.
+        covering : [int] -- массив, где элемент под индексом x : int соответсвует высоте покрытия
+        относительно highs[x] в точке x. 0 означает, что покрытия на данной координате нет.
         bioms : [{
             'start' : int -- координата начала биома.
             'end' : int -- координата окончания биома.
@@ -107,7 +107,8 @@ class GameMap:
     def __init__(self, size_x):
         self.highs = generate_highs(size_x)
         middle_level = sum(self.highs) // len(self.highs)
-        self.waters = make_water(self.highs, middle_level)
+        self.covering = dict()
+        make_water(self.highs, middle_level, self.covering)
         self.objects = generate_objects(size_x)
         for index, value in enumerate(self.objects):
             if value['name'] == 'player':
@@ -142,20 +143,23 @@ class GameMap:
             x += 1
         return sight
 
-    def get_waters(self, length):
+    def get_covering(self, length):
         '''
-        Возвращает массив с разницей в уровнях воды и почвы так, чтобы с обеих сторон от игрока
-        находилось length : int блоков.
+        Возвращает массив с разницей между уровнями покрытия и поверхности так, чтобы с
+        обеих сторон от игрока находилось length : int блоков.
         '''
         player = self.get_player()
         start = max(0, player['position'] - length)
         finish = min(player['position'] + length, self.get_len() - 1)
         x = start
-        waters = []
+        covering = []
         while x <= finish:
-            waters.append(self.waters[x])
+            if x in self.covering:
+                covering.append(self.covering[x])
+            else:
+                covering.append((0, 'none'))
             x += 1
-        return waters
+        return covering
 
 if __name__ == "__main__":
     temp = GameMap(200)
