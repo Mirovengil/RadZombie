@@ -67,6 +67,25 @@ def draw_column(screen, start_cell, end_cell, shift, block_type):
         screen.blit(DATA[block_type], (shift * CELL_SIZE, i * CELL_SIZE))
         i += 1
 
+def draw_terrain(screen, line):
+    '''
+    Отрисовывает почву при условии, что line[x : int]: 
+    (
+        int -- y для текущего x;
+        str -- название типа блока;
+    ).
+    '''
+    x = 0
+    for high, block in line:
+        draw_column(screen, 0, high, x, block)
+        x += 1
+
+def draw_covering(screen, line, covering):
+    x = 0
+    for covering_level, block in covering:
+        draw_column(screen, line[x][0], line[x][0] + covering_level - 1, x, block)
+        x += 1
+
 def draw_game(screen, game):
     '''
     Отрисовывает на экран состояние игры game : Game.
@@ -74,15 +93,8 @@ def draw_game(screen, game):
     cls(screen)
     highs = game.landscapes()
     waters = game.waters()
-    x = 0
-    for high, block in highs:
-        draw_column(screen, 0, high, x, block)
-        x += 1
-    x = 0
-    for water_level, block in waters:
-        draw_column(screen, highs[x][0], highs[x][0] + water_level - 1, x, block)
-        x += 1
-
+    draw_terrain(screen, highs)
+    draw_covering(screen, highs, waters)
 
 if __name__ == "__main__":
     game = Game({
