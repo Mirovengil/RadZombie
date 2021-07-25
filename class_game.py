@@ -33,4 +33,14 @@ class Game:
             else:
                 places.append((high, 'marker'))
         return places
-        
+
+    def waters(self):
+        '''
+        Возвращает разность между уровнями жидкости и земли, чтобы жидкость можно было рисовать.
+        Биомы (ПОКА НЕТ!) учитываются 
+        '''
+        levels = self.map.get_waters(19)
+        waters = []
+        for level in levels:
+            waters.append((level, 'water_block'))
+        return waters

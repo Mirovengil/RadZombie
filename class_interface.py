@@ -14,13 +14,18 @@ WINDOW_SIZE_X = 800
 WINDOW_SIZE_Y = 600
 CELL_SIZE = 20
 
+def cls(screen):
+    '''
+    Очищает screen : pygame.surface.
+    '''
+    pygame.draw.rect(screen, (0, 0, 0), (0, 0, WINDOW_SIZE_X, WINDOW_SIZE_Y))
+
 def get_img_by_name(name):
     '''
     Возвращает пригодную для pygame картинку с названием name : str.
     Картинка должна быть расположена в директории ./img и должна иметь
     расширение .png.
     '''
-    print(name)
     return pygame.image.load('./img/' + name + '.png').convert_alpha()
 
 DATA = dict()
@@ -39,23 +44,45 @@ def load_images(name):
     fin.close()
     return data
 
+def draw_column(screen, start_cell, end_cell, shift, block_type):
+    '''
+    Отрисовывает столбик из блоков block_type : str так:
+    ^
+    |
+    |
+    |                            C <--------- end_cell : int
+    |                            C
+    |    shift : int        C
+    |<------------------> C <--------- start_cell : int
+    |_______________________>
+    screen : pygame.surface.
+    Всё расстояние измеряется в блоках. 
+    '''
+    max_y = WINDOW_SIZE_Y // CELL_SIZE
+    start_cell = max_y - start_cell
+    end_cell = max_y - end_cell
+    end_cell, start_cell = start_cell, end_cell
+    i = start_cell
+    while i <= end_cell:
+        screen.blit(DATA[block_type], (shift * CELL_SIZE, i * CELL_SIZE))
+        i += 1
+
 def draw_game(screen, game):
     '''
     Отрисовывает на экран состояние игры game : Game.
     '''
-    pygame.draw.rect(screen, (0, 0, 0), (0, 0, WINDOW_SIZE_X, WINDOW_SIZE_Y))
+    cls(screen)
     highs = game.landscapes()
-    cnt = 0
+    waters = game.waters()
+    x = 0
     for high, block in highs:
-        if high <= 0:
-            cnt += 1
-            continue
-        block_pos = WINDOW_SIZE_Y
-        for i in range(high):
-            screen.blit(DATA[block], (cnt * CELL_SIZE, block_pos - CELL_SIZE))
-            block_pos -= CELL_SIZE
-        cnt += 1
-    
+        draw_column(screen, 0, high, x, block)
+        x += 1
+    x = 0
+    for water_level, block in waters:
+        draw_column(screen, highs[x][0], highs[x][0] + water_level - 1, x, block)
+        x += 1
+
 
 if __name__ == "__main__":
     game = Game({
@@ -67,8 +94,6 @@ if __name__ == "__main__":
     DATA = load_images('img_list')
     DATA['btn font'] = pygame.font.SysFont('ubuntu', 20)
     clock = pygame.time.Clock()
-
-    print(game.map.get_players_sight(19, 15))
     timer = pygame.time.get_ticks()
     game_over = False
     while not game_over:

@@ -71,6 +71,15 @@ def generate_objects(size_x):
     objects.append(player)
     return objects
 
+def make_water(line, level):
+    '''
+    Заполняет те блоки, которые ниже уровня level : int, водой.
+    '''
+    waters = []
+    for y in line:
+        waters.append(max(level - y, 0))
+    return waters
+
 class GameMap:
     '''
     Класс игровой карты.
@@ -85,11 +94,20 @@ class GameMap:
     Поля:
         size_x : int -- длина игровой карты (в блоках).
         highs : [int] -- массив, где элемент под индексом x : int соответствует высоте карты в точке x.
+        waters : [int] -- массив, где элемент под индексом x : int соответсвует высоте водяного покрова
+        относительно highs[x] в точке x. 0 означает, что воды на данной координате нет.
+        bioms : [{
+            'start' : int -- координата начала биома.
+            'end' : int -- координата окончания биома.
+            'type' : string -- тип биома.
+        }] -- массив биомов, которые хранятся в виде словарей (за неимением в python3 классов).
         objects : [Object] -- массив игровых объектов (за подробностями -- в документацию).
         player : int -- номер игрока в массиве self.objects (для быстрого доступа к нему). 
     '''
     def __init__(self, size_x):
         self.highs = generate_highs(size_x)
+        middle_level = sum(self.highs) // len(self.highs)
+        self.waters = make_water(self.highs, middle_level)
         self.objects = generate_objects(size_x)
         for index, value in enumerate(self.objects):
             if value['name'] == 'player':
@@ -123,7 +141,22 @@ class GameMap:
             sight.append(self.highs[x] -  self.highs[player['position']] + player_position_on_screen)
             x += 1
         return sight
-        
+
+    def get_waters(self, length):
+        '''
+        Возвращает массив с разницей в уровнях воды и почвы так, чтобы с обеих сторон от игрока
+        находилось length : int блоков.
+        '''
+        player = self.get_player()
+        start = max(0, player['position'] - length)
+        finish = min(player['position'] + length, self.get_len() - 1)
+        x = start
+        waters = []
+        while x <= finish:
+            waters.append(self.waters[x])
+            x += 1
+        return waters
+
 if __name__ == "__main__":
     temp = GameMap(200)
     print(temp.highs)
