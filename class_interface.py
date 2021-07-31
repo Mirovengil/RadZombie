@@ -104,10 +104,12 @@ if __name__ == "__main__":
     pygame.init()
     screen = pygame.display.set_mode((WINDOW_SIZE_X, WINDOW_SIZE_Y))
     DATA = load_images('img_list')
-    DATA['btn font'] = pygame.font.SysFont('ubuntu', 20)
+    DATA['btn font'] = pygame.font.SysFont('ubuntu', 20)  
+
     clock = pygame.time.Clock()
     timer = pygame.time.get_ticks()
     game_over = False
+
     while not game_over:
         draw_game(screen, game)
         pygame.display.flip()

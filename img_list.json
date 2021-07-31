@@ -1,5 +1,9 @@
 [
     "dirt_block",
     "marker",
-    "water_block"
+    "water_block",
+    "radiated_water_block",
+    "radiated_dirt_block",
+    "concrete",
+    "grass"
 ]

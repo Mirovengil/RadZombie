@@ -80,6 +80,43 @@ def make_water(line, level, covering):
         if y <= level:
             covering[x] = (level - y + 1, 'water_block')
         x += 1
+
+def generate_bioms(size_x, bioms_array, start=None, end=None):
+    '''
+    Заполняет массив bioms_array : [] биомами типа {
+            'start' : int -- координата начала биома.
+            'end' : int -- координата окончания биома.
+            'type' : string -- тип биома.
+    } для карты длиной size_x : int.
+    Все биомы длиной меньше, чем константа BIOMS_LESS_THAN : int.
+    Константа CENTER_SHIFT : int отвечает за смещение центра биома. Изменять на
+    своё усмотрение.
+    Все доступные биомы содержатся в массиве BIOMS : [str].
+    Типы биомов:
+        'wood' -- лес обыкновенный.
+        'radiated wood' -- загрязнённый радиацией лес.
+        'town' -- заброшенный город.
+    Подробнее о типах биомов можно прочитать в документации пользователя.
+    '''
+    BIOMS_LESS_THAN = 256
+    CENTER_SHIFT = 15
+    BIOMS = ['wood', 'radiated wood', 'town']
+    if start is None:
+        start = 0
+        end = size_x - 1
+    if not end - start < BIOMS_LESS_THAN:
+        center = (start + end) // 2
+        center += randint(-CENTER_SHIFT, +CENTER_SHIFT)
+        generate_bioms(size_x, bioms_array, start, center)
+        generate_bioms(size_x, bioms_array, center + 1, end)
+    else:
+        bioms_type = BIOMS[randint(0, len(BIOMS) - 1)]
+        bioms_array.append({
+            'start' : start,
+            'end' : end,
+            'type' : bioms_type
+        })
+
 class GameMap:
     '''
     Класс игровой карты.
@@ -110,6 +147,8 @@ class GameMap:
         self.covering = dict()
         make_water(self.highs, middle_level, self.covering)
         self.objects = generate_objects(size_x)
+        self.bioms = []
+        generate_bioms(size_x, self.bioms)
         for index, value in enumerate(self.objects):
             if value['name'] == 'player':
                 self.player = index
@@ -157,9 +196,15 @@ class GameMap:
             if x in self.covering:
                 covering.append(self.covering[x])
             else:
-                covering.append((0, 'none'))
+                covering.append((1, self.get_auto_covering(x)))
             x += 1
         return covering
+
+    def get_auto_covering(self, x):
+        '''
+        Возвращает автоматический тип покрытия для клетки в координате x : int.
+        '''
+        return 'grass'
 
 if __name__ == "__main__":
     temp = GameMap(200)
