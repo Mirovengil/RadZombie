@@ -101,6 +101,8 @@ if __name__ == "__main__":
         'size_x' : 200000,
     })
 
+    print(game.map.bioms)
+
     pygame.init()
     screen = pygame.display.set_mode((WINDOW_SIZE_X, WINDOW_SIZE_Y))
     DATA = load_images('img_list')

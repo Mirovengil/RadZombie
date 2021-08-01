@@ -2,8 +2,14 @@
 Модуль со всем необходимым для работы с игровой картой.
 '''
 
-from random import  randint
+from random import  randint, choice
 from class_object import get_object
+import json
+
+BIOMS = []
+
+with open('./data/bioms.json', 'r') as fin:
+    BIOMS = json.load(fin)
 
 def broke_line(start_point, end_point, line, arg):
     '''
@@ -100,7 +106,6 @@ def generate_bioms(size_x, bioms_array, start=None, end=None):
     '''
     BIOMS_LESS_THAN = 256
     CENTER_SHIFT = 15
-    BIOMS = ['wood', 'radiated wood', 'town']
     if start is None:
         start = 0
         end = size_x - 1
@@ -110,7 +115,8 @@ def generate_bioms(size_x, bioms_array, start=None, end=None):
         generate_bioms(size_x, bioms_array, start, center)
         generate_bioms(size_x, bioms_array, center + 1, end)
     else:
-        bioms_type = BIOMS[randint(0, len(BIOMS) - 1)]
+        bioms_names = list(BIOMS.keys())
+        bioms_type = choice(bioms_names)
         bioms_array.append({
             'start' : start,
             'end' : end,

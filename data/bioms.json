@@ -1,0 +1,17 @@
+{
+    "wood" : {
+        "block" : "dirt_block",
+        "auto_cover" : "grass",
+        "liquid" : "water"
+    },
+    "radiated wood" : {
+        "block" : "radiated_dirt_block",
+        "auto_cover" : "radiated_sheets",
+        "liquid" : "radiated_water"
+    },
+    "town" : {
+        "block" : "concrete",
+        "auto_cover" : "dust",
+        "liquid" : "dirty_water_block"
+    }
+}
