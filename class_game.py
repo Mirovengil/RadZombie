@@ -22,8 +22,7 @@ class Game:
 
     def landscapes(self):
         '''
-        Возвращает массив высот, которые надо отрисовать, с учётом типов их биомов (пока не
-        реализованы!).
+        Возвращает массив высот для отрисовки, учитывая типы их биомов.
         '''
         highs = self.map.get_players_sight(SIGHT_LEN, 15)
         places = []
@@ -36,9 +35,30 @@ class Game:
     def covering(self):
         '''
         Возвращает разность между уровнями покрытия и поверхности.
-        Биомы (ПОКА НЕТ!) учитываются 
+        Биомы учитываются 
         '''
         return self.map.get_covering(SIGHT_LEN)
+
+    def objects(self):
+        '''
+        Возвращает все объекты в пределах видимости игрока, которые надо отрисовать.
+        В следующем формате:
+        [
+        (
+            str -- тип объекта (игрок, зомби и т.п.);
+            int -- местонахождение объекта относительно поля зрения игрока;
+        )
+        ]
+        '''
+        obj = []
+        for object_ in self.map.objects:
+            obj.append(
+                (
+                    object_['name'],
+                    object_["position"] - self.get_player_sight_start(SIGHT_LEN),
+                )
+            )
+        return obj
 
     def get_player_sight_start(self, length):
         '''

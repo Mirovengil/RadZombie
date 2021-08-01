@@ -72,7 +72,7 @@ def draw_terrain(screen, line):
     Отрисовывает почву при условии, что line[x : int]: 
     (
         int -- y для текущего x;
-        str -- название типа блока;
+        str -- название типа блока в точке x;
     ).
     '''
     x = 0
@@ -81,10 +81,40 @@ def draw_terrain(screen, line):
         x += 1
 
 def draw_covering(screen, line, covering):
+    '''
+    Отрисовывает все покрытия поверх почвы при условии, что 
+    line[x : int]: 
+        (
+            int -- y для текущего x;
+            str -- название типа блока в точке x;
+        );
+    covering[x : int]:
+        (
+            int -- высота покрытия в точке x;
+            str -- название типа покрытия в точке x;
+        );
+    '''
     x = 0
     for covering_level, block in covering:
-        draw_column(screen, line[x][0], line[x][0] + covering_level - 1, x, block)
+        draw_column(screen, line[x][0] + 1, line[x][0] + covering_level, x, block)
         x += 1
+
+def draw_objects(screen, line, objects):
+    '''
+    Отрисовывает игровые объекты (пока только мобов) при условии, что:
+        line[x : int]: 
+            (
+                int -- y для текущего x;
+                str -- название типа блока в точке x;
+            );
+        objects[i : int]:
+            (
+                str -- тип объекта (игрок, зомби и т.п.) под индексом i;
+                int -- местонахождение объекта под индексом i относительно поля зрения игрока;
+            );
+    '''
+    for name, position in objects:
+            draw_column(screen, line[position][0] + 2, line[position][0] + 2, position, name)
 
 def draw_game(screen, game):
     '''
@@ -93,8 +123,10 @@ def draw_game(screen, game):
     cls(screen)
     highs = game.landscapes()
     covering = game.covering()
+    objects = game.objects()
     draw_terrain(screen, highs)
     draw_covering(screen, highs, covering)
+    draw_objects(screen, highs, objects)
 
 if __name__ == "__main__":
     game = Game({
