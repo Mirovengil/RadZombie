@@ -5,5 +5,9 @@
     "radiated_water_block",
     "radiated_dirt_block",
     "concrete",
-    "grass"
+    "grass",
+    "dust",
+    "radiated_sheets",
+    "dirty_water_block",
+    "radiated_water_block"
 ]

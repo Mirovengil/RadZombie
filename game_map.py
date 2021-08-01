@@ -90,7 +90,7 @@ def make_water(line, level, covering):
     x = 0
     for y in line:
         if y <= level:
-            covering[x] = (level - y + 1, 'water_block')
+            covering[x] = (level - y + 1, 'liquid')
         x += 1
 
 def generate_bioms(size_x, bioms_array, start=None, end=None):
@@ -110,7 +110,7 @@ def generate_bioms(size_x, bioms_array, start=None, end=None):
         'town' -- заброшенный город.
     Подробнее о типах биомов можно прочитать в документации пользователя.
     '''
-    BIOMS_LESS_THAN = 30
+    BIOMS_LESS_THAN = 64
     CENTER_SHIFT = 15
     if start is None:
         start = 0
@@ -172,9 +172,9 @@ class GameMap:
         '''
         left = -1
         right = len(self.bioms)
-        while right - left < 1:
+        while right - left > 1:
             middle = (left + right) // 2
-            if self.bioms[middle]['start'] <= x:
+            if self.bioms[middle]['end'] <= x:
                 left = middle
             else:
                 right = middle
@@ -221,7 +221,7 @@ class GameMap:
         covering = []
         while x <= finish:
             if x in self.covering:
-                covering.append(self.covering[x])
+                covering.append((self.covering[x][0], BIOMS[self.get_bioms_type(x)][self.covering[x][1]]))
             else:
                 covering.append((1, self.get_auto_covering(x)))
             x += 1
@@ -231,7 +231,7 @@ class GameMap:
         '''
         Возвращает автоматический тип покрытия для клетки в координате x : int.
         '''
-        return 'grass'
+        return BIOMS[self.get_bioms_type(x)]['auto_cover']
 
 if __name__ == "__main__":
     temp = GameMap(200)

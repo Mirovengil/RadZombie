@@ -38,8 +38,7 @@ class Game:
         Возвращает разность между уровнями покрытия и поверхности.
         Биомы (ПОКА НЕТ!) учитываются 
         '''
-        covering = self.map.get_covering(SIGHT_LEN)
-        return covering
+        return self.map.get_covering(SIGHT_LEN)
 
     def get_player_sight_start(self, length):
         '''
@@ -55,3 +54,9 @@ class Game:
         Возвращает тип блока, который находится в координате x : int.
         '''
         return get_from_BIOMS(self.map.get_bioms_type(x), 'block')
+
+    def liquid_type(self, x):
+        '''
+        Возвращает тип жидкости, которая находится в координате x : int.
+        '''
+        return get_from_BIOMS(self.map.get_bioms_type(x), 'liquid')
