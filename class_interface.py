@@ -101,7 +101,7 @@ if __name__ == "__main__":
         'size_x' : 200000,
     })
 
-    print(game.map.bioms)
+    print(game.map.bioms[:10])
 
     pygame.init()
     screen = pygame.display.set_mode((WINDOW_SIZE_X, WINDOW_SIZE_Y))

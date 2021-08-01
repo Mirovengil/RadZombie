@@ -11,6 +11,12 @@ BIOMS = []
 with open('./data/bioms.json', 'r') as fin:
     BIOMS = json.load(fin)
 
+def get_from_BIOMS(biom, key):
+    '''
+    Возвращает информацию key о биоме biom.
+    '''
+    return BIOMS[biom][key]
+
 def broke_line(start_point, end_point, line, arg):
     '''
     Функция для рекурсивной генерации карты высот. Де-факто, карта высот является
@@ -104,7 +110,7 @@ def generate_bioms(size_x, bioms_array, start=None, end=None):
         'town' -- заброшенный город.
     Подробнее о типах биомов можно прочитать в документации пользователя.
     '''
-    BIOMS_LESS_THAN = 256
+    BIOMS_LESS_THAN = 30
     CENTER_SHIFT = 15
     if start is None:
         start = 0
@@ -159,6 +165,21 @@ class GameMap:
             if value['name'] == 'player':
                 self.player = index
                 break
+
+    def get_bioms_type(self, x):
+        '''
+        Возвращает тип биома для координаты x : int.
+        '''
+        left = -1
+        right = len(self.bioms)
+        while right - left < 1:
+            middle = (left + right) // 2
+            if self.bioms[middle]['start'] <= x:
+                left = middle
+            else:
+                right = middle
+        return self.bioms[left]['type']
+            
 
     def get_player(self):
         '''

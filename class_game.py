@@ -4,7 +4,9 @@
 Класс является объектом типа Controller в патттерне MVC.  
 '''
 
-from game_map import GameMap
+SIGHT_LEN = 19
+
+from game_map import GameMap, get_from_BIOMS
 
 class Game:
     '''
@@ -23,12 +25,12 @@ class Game:
         Возвращает массив высот, которые надо отрисовать, с учётом типов их биомов (пока не
         реализованы!).
         '''
-        highs = self.map.get_players_sight(19, 15)
+        highs = self.map.get_players_sight(SIGHT_LEN, 15)
         places = []
-        cnt = 0
+        x = self.get_player_sight_start(SIGHT_LEN)
         for high in highs:
-            cnt += 1
-            places.append((high, 'dirt_block'))
+            places.append((high, self.block_type(x)))
+            x += 1
         return places
 
     def covering(self):
@@ -36,5 +38,20 @@ class Game:
         Возвращает разность между уровнями покрытия и поверхности.
         Биомы (ПОКА НЕТ!) учитываются 
         '''
-        covering = self.map.get_covering(19)
+        covering = self.map.get_covering(SIGHT_LEN)
         return covering
+
+    def get_player_sight_start(self, length):
+        '''
+        Возвращает координату на оси x, которая является началом поля видимости игрока,
+        которое имеет длину length : int.
+        '''
+        player = self.map.get_player()
+        start_sight = max(0, player['position'] - length)
+        return start_sight
+
+    def block_type(self, x):
+        '''
+        Возвращает тип блока, который находится в координате x : int.
+        '''
+        return get_from_BIOMS(self.map.get_bioms_type(x), 'block')
