@@ -14,6 +14,8 @@ WINDOW_SIZE_X = 800
 WINDOW_SIZE_Y = 600
 CELL_SIZE = 20
 
+GLOBAL_SHIFT = 0
+
 def cls(screen):
     '''
     Очищает screen : pygame.surface.
@@ -64,7 +66,7 @@ def draw_column(screen, start_cell, end_cell, shift, block_type):
     end_cell, start_cell = start_cell, end_cell
     i = start_cell
     while i <= end_cell:
-        screen.blit(DATA[block_type], (shift * CELL_SIZE, i * CELL_SIZE))
+        screen.blit(DATA[block_type], ((shift + GLOBAL_SHIFT) * CELL_SIZE, i * CELL_SIZE))
         i += 1
 
 def draw_terrain(screen, line):
@@ -143,6 +145,7 @@ if __name__ == "__main__":
     game_over = False
 
     while not game_over:
+        GLOBAL_SHIFT = game.global_shift
         draw_game(screen, game)
         pygame.display.flip()
         game.manipulate(pygame.key.get_pressed())

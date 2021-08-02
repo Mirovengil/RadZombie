@@ -20,10 +20,12 @@ class Game:
             size_x : int -- длина игровой карты (в блоках).
         '''
         self.map = GameMap(options['size_x'])
+        self.global_shift = 0
 
     def landscapes(self):
         '''
         Возвращает массив высот для отрисовки, учитывая типы их биомов.
+        Здесь же обновляется значение global_shift.
         '''
         highs = self.map.get_players_sight(SIGHT_LEN, 15)
         places = []
@@ -31,9 +33,7 @@ class Game:
         for high in highs:
             places.append((high, self.block_type(x)))
             x += 1
-        print(len(places))
-        for i in range(SIGHT_LEN * 2 + 1 - len(places)):
-            places.insert(0, (0, 'none'))
+        self.global_shift = SIGHT_LEN * 2 + 1 - len(places)
         return places
 
     def manipulate(self, pressed_keys):
