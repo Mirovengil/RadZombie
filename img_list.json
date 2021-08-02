@@ -10,5 +10,6 @@
     "radiated_sheets",
     "dirty_water_block",
     "radiated_water_block",
-    "player"
+    "player",
+    "none"
 ]

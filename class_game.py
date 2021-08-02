@@ -7,6 +7,7 @@
 SIGHT_LEN = 19
 
 from game_map import GameMap, get_from_BIOMS
+import pygame
 
 class Game:
     '''
@@ -30,7 +31,26 @@ class Game:
         for high in highs:
             places.append((high, self.block_type(x)))
             x += 1
+        print(len(places))
+        for i in range(SIGHT_LEN * 2 + 1 - len(places)):
+            places.insert(0, (0, 'none'))
         return places
+
+    def manipulate(self, pressed_keys):
+        '''
+        Осуществляет управление игрой в зависимости от нажатых клавиш pressed_keys : 
+        {
+        pygame.KEY : bool
+        }
+        '''
+        if pressed_keys[pygame.K_d]:
+            self.map.get_player()['position'] += 1
+        if pressed_keys[pygame.K_a]:
+            self.map.get_player()['position'] -= 1
+        if self.map.get_player()['position'] < 0:
+            self.map.get_player()['position'] = 0
+        if self.map.get_player()['position'] >= len(self.map.highs):
+            self.map.get_player()['position'] = len(self.map.highs) - 1
 
     def covering(self):
         '''

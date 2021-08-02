@@ -133,8 +133,6 @@ if __name__ == "__main__":
         'size_x' : 200000,
     })
 
-    print(game.map.bioms[:10])
-
     pygame.init()
     screen = pygame.display.set_mode((WINDOW_SIZE_X, WINDOW_SIZE_Y))
     DATA = load_images('img_list')
@@ -147,9 +145,7 @@ if __name__ == "__main__":
     while not game_over:
         draw_game(screen, game)
         pygame.display.flip()
-        pressed_keys = pygame.key.get_pressed()
-        if pressed_keys[pygame.K_SPACE]:
-            game.map.get_player()['position'] += 1
+        game.manipulate(pygame.key.get_pressed())
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 game_over = True
